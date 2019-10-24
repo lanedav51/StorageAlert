@@ -17,13 +17,12 @@ foreach($Computer in $Computers)
     }
     if($UsedHD -lt 10 -AND $i -eq 0)
     {
-        $obj | Export-Csv -Path "StorageLow$(get-date -f yyyy-MM-dd).csv"
-        $i++
+        $obj | Export-Csv -Path .\StorageLow_$(get-date -f MM-dd-yyyy).csv
+        $i = 1
     }
-    elseif ($UsedHD -lt 10 -AND $i -ge 1) 
+    elseif ($UsedHD -lt 10 -AND $i -eq 1) 
     {
-        $obj | Export-Csv -Path "StorageLow$(get-date -f yyyy-MM-dd).csv" -Append
-        $i++
+        $obj | Export-Csv -Path .\StorageLow_$(get-date -f MM-dd-yyyy).csv -Append
     }
     Exit-PSSession
 }
