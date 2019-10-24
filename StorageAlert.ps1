@@ -15,7 +15,6 @@ foreach($Computer in $Computers)
         Total_Disk = $MaxHD
         Disk_Free = $UsedHD
     }
-    Exit-PSSession
     if($UsedHD -lt 10 -AND $i -eq 0)
     {
         $obj | Export-Csv -Path "StorageLow$(get-date -f yyyy-MM-dd).csv"
@@ -26,6 +25,7 @@ foreach($Computer in $Computers)
         $obj | Export-Csv -Path "StorageLow$(get-date -f yyyy-MM-dd).csv" -Append
         $i++
     }
+    Exit-PSSession
 }
 
 $options = @{
