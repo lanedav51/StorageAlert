@@ -4,26 +4,26 @@ $Computers = $File.Computers
 
 foreach($Computer in $Computers)
 {
-    $MaxHD = get-CimInstance -Classname Win32_LogicalDisk -ComputerName $Computer | where-Object{$_.DeviceID -eq "C:"} | select-object -Property Size | ForEach-Object {"{0:N2}" -f ($_.Size / 1GB)}
-    $UsedHD = get-CimInstance -Classname Win32_LogicalDisk -ComputerName $Computer  | where-Object{$_.DeviceID -eq "C:"} | select-object -Property FreeSpace | ForEach-Object {"{0:N2}" -f ($_.FreeSpace / 1GB)}
-    $OpSys = (get-CimInstance Win32_OperatingSystem).name
+    Enter-PSSession -ComputerName $Computer
+    $Drive = Get-PSDrive C
+    $FreeHD = $Drive.used
+    $FreeHD = $FreeHD/1GB
     $i = 0
     $obj = new-object psobject -Property @{
         ComputerName = $Computer
-        MaxDisk = $MaxHD
-        FreeDisk = $UsedHD
-        OperatingSystem = $OpSys
+        FreeDisk = $FreeHD
     }
-    if($UsedHD -lt 75 -AND $i -eq 0)
+    if($FreeHD -lt 75 -AND $i -eq 0)
     {
         $obj | Export-Csv -Path "StorageAlertTest.csv"
         $i++
     }
-    elseif ($UsedHD -lt 75 -AND $i -ge 1) 
+    elseif ($FreeHD -lt 75 -AND $i -ge 1) 
     {
         $obj | Export-Csv -Path "StorageAlertTest.csv" -Append
         $i++
     }
+    Exit-PSSession
 }
 
 $options = @{
