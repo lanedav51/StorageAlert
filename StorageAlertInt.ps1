@@ -1,13 +1,13 @@
 $TxtPath = "C:\Users\administrator.AMERINETCENTRAL\Desktop\Computers.txt"
 $File = Import-Csv $TxtPath
 $Computers = $File.Computers
+$i=0
 foreach($Computer in $Computers)
 {
     Enter-PSSession -ComputerName $Computer
     $MaxHD = get-CimInstance -Classname Win32_LogicalDisk | where-Object{$_.DeviceID -eq "C:"} | select-object -Property Size | ForEach-Object {"{0:N2}" -f ($_.Size / 1GB)}
     $UsedHD = get-CimInstance -Classname Win32_LogicalDisk | where-Object{$_.DeviceID -eq "C:"} | select-object -Property FreeSpace | ForEach-Object {"{0:N2}" -f ($_.FreeSpace / 1GB)}
     $OpSys = (get-CimInstance Win32_OperatingSystem).name
-    $i=0
     $obj = new-object psobject -Property @{
         Computer_Name = $Computer
         Operating_System = $OpSys
