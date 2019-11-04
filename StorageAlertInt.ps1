@@ -16,12 +16,12 @@ foreach($Computer in $Computers)
     }
     if($UsedHD -lt 75 -AND $i -eq 0)
     {
-        $obj | Export-Csv -Path .\StorageLow_$(get-date -f MM-dd-yyyy).csv
+        $obj | Export-Csv -Path "StorageLow_$(get-date -f MM-dd-yyyy).csv"
         $i=1
     }
     elseif ($UsedHD -lt 75 -AND $i -eq 1)
     {
-        $obj | Export-Csv -Path .\StorageLow_$(get-date -f MM-dd-yyyy).csv -Append
+        $obj | Export-Csv -Path "StorageLow_$(get-date -f MM-dd-yyyy).csv" -Append
     }
     Exit-PSSession
 }
@@ -32,7 +32,7 @@ $options = @{
     'From' = "DiskAlertMgmr@intalere.com"
     'Subject' = "Free Disk Space Alert"
     'Body' = "The attached spreadsheet contains all scanned systems that have fallen below 75 Gb of free disk space."
-    'Attachments' = "StorageLow$(get-date -f yyyy-MM-dd).csv"
+    'Attachments' = "StorageLow_$(get-date -f yyyy-MM-dd).csv"
 }
 
 Send-MailMessage @options
